@@ -7,13 +7,22 @@ import java.io.IOException;
 import maze.Direction;
 import maze.Door;
 import maze.Maze;
-import maze.MazeGameCreator;
+import maze.AbstractMazeFactory;
+import maze.MazeFactory;
 import maze.Room;
 import maze.Wall;
 import maze.ui.MazeViewer;
 
-public class RedMazeGameCreator extends MazeGameCreator {
+public class RedMazeFactory extends MazeFactory {
 	
+	public RedMazeFactory() {
+		super(null);
+	}
+	
+	public RedMazeFactory(String filePath) {
+		super(filePath);
+	}
+
 	@Override
 	public RedWall makeWall() {
 		RedWall newWall = new RedWall();

@@ -31,8 +31,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import red.RedMazeGameCreator;
-import blue.BlueMazeGameCreator;
+import red.RedMazeFactory;
+import blue.BlueMazeFactory;
 import maze.ui.MazeViewer;
 
 /**
@@ -41,29 +41,17 @@ import maze.ui.MazeViewer;
  * @version 1.0
  * @since 1.0
  */
-public class MazeGameCreator
+public abstract class AbstractMazeFactory implements IMazeFactory
 {
 	/**
 	 * Creates a small maze.
 	 */
 	
-
-	/* Key words */
-	protected static String wallWord = "wall";
-	protected static char doorChar = 'd';
-	protected static String openWord = "open";
+	public AbstractMazeFactory(String filePath) {
+		this.filePath = filePath;
+	}
 	
-	/* Parameter indexes*/
-	protected static int paramItemType = 0;
-	protected static int paramIdNumber = 1;
-	protected static int paramNorthIndex = 2;
-	protected static int paramSouthIndex = 3;
-	protected static int paramEastIndex = 4;
-	protected static int paramWestIndex = 5;
-	protected static int doorRoom1Index = 2;
-	protected static int doorRoom2Index = 3;
-	protected static int doorOpenIndex = 4;
-	protected static int defaultStartRoom = 0;
+	protected String filePath;
 	
 	/* Default create maze method */
 	public Maze createMaze()
@@ -107,23 +95,23 @@ public class MazeGameCreator
 		return maze;
 	}
 	
+	public void setFilePath(String newFilePath) {
+		filePath = newFilePath;
+	}
+	
+	public String getFilePath() {
+		return filePath;
+	}
+	
 	/* Adapter methods for creating new maze items */
-	public Maze makeMaze() {
-		return new Maze();
-	}
 	
-	public Wall makeWall() {
-		Wall newWall = new Wall();
-		return newWall;
-	}
+	public abstract Maze makeMaze();
 	
-	public Room makeRoom(int roomNumber) {
-		return new Room(roomNumber);
-	}
+	public abstract Wall makeWall();
 	
-	public Door makeDoor(Room room1, Room room2) {
-		return new Door(room1,room2);
-	}
+	public abstract Room makeRoom(int roomNumber);
+	
+	public abstract Door makeDoor(Room room1, Room room2);
 	
 	/* Method for inserting door between two rooms */
 	protected void insertDoor(Room room1, Room room2, Door door, Direction room1To2) {
@@ -214,37 +202,4 @@ public class MazeGameCreator
 		return room;
 	}
 
-	public static void main(String[] args)
-	{
-		/* parameter one indicates the color of the maze
-		 * parameter two is optional and is the filepath to a maze
-		 * configuration file
-		 */
-		MazeGameCreator gameCreator = new MazeGameCreator();
-		
-		if(args.length >= 1)
-			switch(args[0]) {
-			case "red":
-				gameCreator = new RedMazeGameCreator();
-				break;
-			case "blue":
-				gameCreator = new BlueMazeGameCreator();
-			default:
-				break;
-			}
-		
-		Maze maze = null;
-		if(args.length <= 1)
-			maze = gameCreator.createMaze();
-		else
-			try {
-				maze = gameCreator.loadMaze(args[1]);
-			} catch (IOException e) {
-				System.err.println("Error generating maze from file!");
-				e.printStackTrace();
-			}
-	    
-		MazeViewer viewer = new MazeViewer(maze);
-	    viewer.run();
-	}
 }

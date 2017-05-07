@@ -10,4 +10,6 @@ args[0] - Color of maze to generates
 	"blue" - blue maze
 	defaults to default maze game if any other parameter value
 	
-args[1] - Maze configuration file to load maze
+args[1] - Maze configuration file to load maze (Full path, not relative)
+
+Maze game contains the main method
